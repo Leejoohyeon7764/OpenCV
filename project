@@ -1,0 +1,194 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyPpR7J0KBievfq7IwX6Uax0",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/Leejoohyeon7764/OpenCV/blob/main/project\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "1. 이미지 향상"
+      ],
+      "metadata": {
+        "id": "8WHdu96Ruv0p"
+      }
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "mugVLhapry0l"
+      },
+      "outputs": [],
+      "source": [
+        "# 이미지 향상을 위한 히스토그램 평활화 import cv2\n",
+        "import numpy as np\n",
+        "import matplotlib.pyplot as plt\n",
+        "\n",
+        "# 이미지를 그레이스케일로 변환 (기존 이미지를 RGB에서 그레이스케일로 변환)\n",
+        "gray_img = cv2.cvtColor(RGB_img, cv2.COLOR_RGB2GRAY)\n",
+        "\n",
+        "# 히스토그램 평활화 적용\n",
+        "equalized_img = cv2.equalizeHist(gray_img)\n",
+        "\n",
+        "# 결과 출력\n",
+        "cv2_imshow(equalized_img)\n",
+        "plt.title(\"Histogram Equalization (Image Enhancement)\")\n",
+        "plt.show()"
+      ]
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "2. 이미지 분석"
+      ],
+      "metadata": {
+        "id": "cqFImSt0vGDG"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# 이미지 분석을 위한 엣지 검출 (Canny Edge Detection)\n",
+        "edges = cv2.Canny(gray_img, 100, 200)\n",
+        "\n",
+        "# 엣지 검출된 이미지 출력\n",
+        "cv2_imshow(edges)\n",
+        "plt.title(\"Canny Edge Detection (Image Analysis)\")\n",
+        "plt.show()"
+      ],
+      "metadata": {
+        "id": "orjXJsnku-ey"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "3. 이진화"
+      ],
+      "metadata": {
+        "id": "olQ3V6HPvLiM"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# 고정 임계값을 이용한 이진화 (Thresholding)\n",
+        "T = 180  # 임계값 설정\n",
+        "binary_img = np.zeros_like(gray_img)\n",
+        "\n",
+        "# 임계값을 기준으로 이진화 수행 (T보다 크면 255, 작으면 0)\n",
+        "binary_img[gray_img > T] = 255\n",
+        "\n",
+        "# 이진화된 이미지 출력\n",
+        "cv2_imshow(binary_img)\n",
+        "plt.title(f\"Binary Image with Threshold T = {T}\")\n",
+        "plt.show()"
+      ],
+      "metadata": {
+        "id": "xZnA02hKvGfA"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "4. 형상 변환"
+      ],
+      "metadata": {
+        "id": "Pxtq_RVxvQQO"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# 이미지 회전 (Rotation)\n",
+        "height, width = RGB_img.shape[:2]\n",
+        "center = (width // 2, height // 2)  # 회전 중심\n",
+        "rotation_matrix = cv2.getRotationMatrix2D(center, 45, 1)  # 45도 회전, 1배 크기 유지\n",
+        "rotated_img = cv2.warpAffine(RGB_img, rotation_matrix, (width, height))\n",
+        "\n",
+        "# 회전된 이미지 출력\n",
+        "cv2_imshow(rotated_img)\n",
+        "plt.title(\"Rotated Image (45 degrees)\")\n",
+        "plt.show()"
+      ],
+      "metadata": {
+        "id": "Y4i0QHcyvOhD"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "5. 노이즈 제거"
+      ],
+      "metadata": {
+        "id": "6bTkosCJvY_G"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "# 가우시안 필터를 이용한 노이즈 제거\n",
+        "gaussian_blurred_img = cv2.GaussianBlur(RGB_img, (5, 5), 0)\n",
+        "\n",
+        "# 가우시안 필터링된 이미지 출력\n",
+        "cv2_imshow(gaussian_blurred_img)\n",
+        "plt.title(\"Gaussian Blurring (Denoising)\")\n",
+        "plt.show()"
+      ],
+      "metadata": {
+        "id": "_l-GfxvNvVLn"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "1. 이미지 향상 : 이미지의 품질을 개선하여 더 명확하고 선명한 이미지를 생성하는 데 중점을 둡니다. 예를 들어, 히스토그램 평활화를 통해 대비를 향상시킬 수 있습니다.\n",
+        "\n",
+        "2. 이미지 분석 : 이미지를 분석하여 유용한 정보를 추출하고, 주요 특징을 식별하는 데 사용됩니다. 엣지 검출과 같은 기술을 통해 객체의 경계를 찾을 수 있습니다.\n",
+        "\n",
+        "3. 이진화 : 이미지를 이진화하여 관심 있는 부분만을 강조하고, 불필요한 정보를 제거하는 과정입니다. 고정 임계값 이진화를 사용하여 이미지를 흑백으로 분리할 수 있습니다.\n",
+        "\n",
+        "4. 형상 변환 : 이미지를 이동, 회전, 크기 변경 등을 통해 변형시켜 원하는 방식으로 분석할 수 있도록 합니다. 이를 통해 이미지 회전, 크기 조정, 이동을 쉽게 처리할 수 있습니다.\n",
+        "\n",
+        "5. 노이즈 제거 : 이미지에서 발생한 원하지 않는 잡음이나 왜곡을 제거하여 품질을 향상시키고, 보다 정확한 분석을 가능하게 합니다. 가우시안 필터와 같은 필터링 기법을 사용하여 이미지를 부드럽게 만들 수 있습니다.\n",
+        "\n",
+        "\n",
+        "결론적으로, 제가 생각하는 디지털 영상처리 알고리즘은 이미지를 분석하고 향상시키기 위해 다양한 기법들을 사용하는 기술입니다. 이 알고리즘들은 이미지의 품질을 개선하고, 중요한 특징을 추출하며, 분석 및 처리를 하는데에 효과적입니다."
+      ],
+      "metadata": {
+        "id": "UBO04U9hyW9U"
+      }
+    }
+  ]
+}
